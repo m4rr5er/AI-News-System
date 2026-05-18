@@ -1,0 +1,862 @@
+<view class="app-container">
+
+  <!-- ==================== 视图 1: 首页 (Home) ==================== -->
+  <view class="view-layer view-home" style="opacity: {{currentTab === 'home' ? 1 : 0}}; pointer-events: {{currentTab === 'home' ? 'auto' : 'none'}};">
+    <!-- Header -->
+    <view class="header-section">
+      <view class="h-title">Discover</view>
+      <view class="search-box">
+        <text class="ph ph-magnifying-glass icon-search"></text>
+        <input
+          placeholder="Search news, topics..."
+          placeholder-class="search-placeholder"
+          value="{{searchQuery}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+        />
+        <text class="ph ph-x icon-search-clear" wx:if="{{searchQuery}}" bindtap="clearSearch"></text>
+      </view>
+      <view class="category-row">
+        <scroll-view scroll-x enable-flex="true" class="cat-scroll" show-scrollbar="{{false}}">
+          <view class="cat-list">
+            <view class="cat-pill {{activeCat === 'All' ? 'active' : ''}}" bindtap="switchCat" data-cat="All">All</view>
+            <view class="cat-pill {{activeCat === 'Technology' ? 'active' : ''}}" bindtap="switchCat" data-cat="Technology">Technology</view>
+            <view class="cat-pill {{activeCat === 'Business' ? 'active' : ''}}" bindtap="switchCat" data-cat="Business">Business</view>
+            <view class="cat-pill {{activeCat === 'Sport' ? 'active' : ''}}" bindtap="switchCat" data-cat="Sport">Sport</view>
+            <view class="cat-pill {{activeCat === 'Health' ? 'active' : ''}}" bindtap="switchCat" data-cat="Health">Health</view>
+            <view class="cat-pill {{activeCat === 'Politics' ? 'active' : ''}}" bindtap="switchCat" data-cat="Politics">Politics</view>
+            <view class="cat-pill {{activeCat === 'Science' ? 'active' : ''}}" bindtap="switchCat" data-cat="Science">Science</view>
+            <view class="cat-pill {{activeCat === 'Culture' ? 'active' : ''}}" bindtap="switchCat" data-cat="Culture">Culture</view>
+            <view class="cat-pill {{activeCat === 'Environment' ? 'active' : ''}}" bindtap="switchCat" data-cat="Environment">Environment</view>
+            <view class="cat-pill {{activeCat === 'Entertainment' ? 'active' : ''}}" bindtap="switchCat" data-cat="Entertainment">Entertainment</view>
+            <view class="cat-pill {{activeCat === 'Travel' ? 'active' : ''}}" bindtap="switchCat" data-cat="Travel">Travel</view>
+            <view class="cat-pill {{activeCat === 'Arts' ? 'active' : ''}}" bindtap="switchCat" data-cat="Arts">Arts</view>
+          </view>
+        </scroll-view>
+        <view class="cat-menu-btn" bindtap="toggleCategorySheet">
+          <view class="cat-menu-icon">
+            <view class="cat-menu-dot"></view>
+            <view class="cat-menu-dot"></view>
+            <view class="cat-menu-dot"></view>
+            <view class="cat-menu-dot"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- News List -->
+    <scroll-view scroll-y class="main-scroll" type="list" show-scrollbar="{{false}}" bindscrolltolower="onNewsScrollToLower" lower-threshold="100" wx:if="{{!isSearching}}">
+      <view class="news-list">
+        <!-- Featured Card (first item) -->
+        <view class="news-card featured" wx:if="{{newsList.length > 0}}" bindtap="goToDetail" data-id="{{newsList[0].id}}">
+          <view class="cover-wrapper">
+            <image src="{{newsList[0].cover_image}}" mode="aspectFill" class="cover-img"></image>
+            <view class="tag-top" style="{{newsList[0].catStyle}}">{{newsList[0].category}}</view>
+            <view class="tag-bottom" style="{{newsList[0].difficultyStyle}}">
+              <text class="ph-fill ph-translate"></text> {{newsList[0].difficulty_score || '-'}}/10
+            </view>
+          </view>
+          <view class="card-content">
+            <view class="card-title">{{newsList[0].simple_title || newsList[0].title}}</view>
+            <view class="card-desc">{{newsList[0].en_summary}}</view>
+            <view class="card-meta">
+              <text>{{newsList[0].formatted_time}} • {{newsList[0].source || 'AI News'}}</text>
+              <view class="hot-score">
+                <image src="/assets/icons/hot.svg" class="hot-icon" mode="aspectFit"></image>{{newsList[0].heat_index || 0}}
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- Compact Cards (remaining items) -->
+        <view class="news-card compact" wx:for="{{newsList}}" wx:key="id" wx:if="{{index > 0}}" bindtap="goToDetail" data-id="{{item.id}}">
+          <view class="compact-info">
+            <view class="tag-small" style="{{item.catStyle}}">{{item.category}}</view>
+            <view class="card-title-sm">{{item.simple_title || item.title}}</view>
+            <view class="card-desc-sm">{{item.en_summary}}</view>
+            <view class="card-meta-sm">{{item.formatted_time}} • {{item.source || 'AI News'}}</view>
+          </view>
+          <view class="compact-cover">
+            <image src="{{item.cover_image}}" mode="aspectFill"></image>
+            <view class="level-badge" style="{{item.difficultyStyle}}">{{item.difficulty_score || '-'}}/10</view>
+          </view>
+        </view>
+
+        <!-- Load more footer -->
+        <view class="load-more-footer">
+          <view wx:if="{{newsLoading}}">
+            <view class="load-spinner"></view>
+          </view>
+          <view wx:elif="{{!newsHasMore && newsList.length > 0}}" class="load-end-text">No more news</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- Search Results -->
+    <scroll-view scroll-y class="main-scroll" type="list" show-scrollbar="{{false}}" bindscrolltolower="onSearchScrollToLower" lower-threshold="100" wx:else>
+      <view class="news-list">
+        <view class="search-results-header">
+          <text wx:if="{{searchLoading && searchResults.length === 0}}">Searching...</text>
+          <text wx:elif="{{searchResults.length === 0 && searchQuery}}">No results for "{{searchQuery}}"</text>
+          <text wx:elif="{{searchResults.length > 0}}">Results for "{{searchQuery}}"</text>
+        </view>
+        <view class="news-card compact" wx:for="{{searchResults}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+          <view class="compact-info">
+            <view class="tag-small" style="{{item.catStyle}}">{{item.category}}</view>
+            <view class="card-title-sm">{{item.simple_title || item.title}}</view>
+            <view class="card-desc-sm">{{item.en_summary}}</view>
+            <view class="card-meta-sm">{{item.formatted_time}} • {{item.source || 'AI News'}}</view>
+          </view>
+          <view class="compact-cover">
+            <image src="{{item.cover_image}}" mode="aspectFill"></image>
+            <view class="level-badge" style="{{item.difficultyStyle}}">{{item.difficulty_score || '-'}}/10</view>
+          </view>
+        </view>
+        <view class="load-more-footer">
+          <view wx:if="{{searchLoading}}"><view class="load-spinner"></view></view>
+          <view wx:elif="{{!searchHasMore && searchResults.length > 0}}" class="load-end-text">End of results</view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- ==================== 视图 2: 播客列表 (Podcast List) ==================== -->
+  <view class="view-layer view-podcast-list" style="opacity: {{currentTab === 'podcast' ? 1 : 0}}; pointer-events: {{currentTab === 'podcast' ? 'auto' : 'none'}};">
+    <!-- Header -->
+    <view class="pl-header">
+      <view class="pl-title">Listen</view>
+      <view class="pl-search-btn"><text class="ph-bold ph-magnifying-glass"></text></view>
+    </view>
+
+    <scroll-view scroll-y class="pl-scroll" show-scrollbar="{{false}}">
+      <!-- Today's Featured Podcast -->
+      <view class="pl-section-label">Today's Briefing</view>
+      <view class="pl-featured tap-effect" bindtap="openPodcastPlayer" data-index="0" wx:if="{{podcastList.length > 0}}">
+        <image class="pl-featured-bg" src="{{podcastList[0].cover_image || 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=600&q=80'}}" mode="aspectFill"></image>
+        <view class="pl-featured-overlay"></view>
+        <view class="pl-featured-content">
+          <view class="pl-ai-badge">AI GENERATED</view>
+          <view class="pl-featured-title">{{podcastList[0].title || 'The Daily Deep Dive'}}</view>
+          <view class="pl-featured-desc">{{podcastList[0].description || 'Your daily AI-curated news briefing'}}</view>
+          <view class="pl-featured-footer">
+            <view class="pl-featured-meta">
+              <text class="pl-meta-item"><text class="ph-fill ph-clock"></text> {{podcastList[0].duration_label || '5 min'}}</text>
+
+            </view>
+            <view class="pl-play-btn">
+              <image src="/assets/icons/play_arrow.svg" class="pl-play-icon-img" mode="aspectFit"></image>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!-- Placeholder when no podcast -->
+      <view class="pl-featured pl-featured-empty tap-effect" wx:elif="{{!podcastLoading}}">
+        <view class="pl-featured-content pl-empty-content">
+          <text class="ph-fill ph-microphone-slash pl-empty-icon"></text>
+          <view class="pl-empty-text">No podcast yet today</view>
+        </view>
+      </view>
+
+      <!-- Previous Episodes -->
+      <view class="pl-section-label pl-section-label-prev">Previous Episodes</view>
+      <view class="pl-episodes">
+        <view class="pl-episode-item tap-effect" wx:for="{{podcastList}}" wx:key="id" wx:if="{{index > 0}}" bindtap="openPodcastPlayer" data-index="{{index}}">
+          <image class="pl-ep-cover" src="{{item.cover_image || 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=200&q=80'}}" mode="aspectFill"></image>
+          <view class="pl-ep-info">
+            <view class="pl-ep-date">{{item.formatted_date}}</view>
+            <view class="pl-ep-title">{{item.title}}</view>
+            <view class="pl-ep-dur"><text class="ph-fill ph-play-circle"></text> {{item.duration_label || '0 sec'}}</view>
+          </view>
+        </view>
+        <view class="pl-loading" wx:if="{{podcastLoading}}">
+          <view class="load-spinner"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- Mini Player (shows when a podcast is selected but full player is closed) -->
+    <view class="mini-player {{miniPlayerVisible ? 'mini-player-show' : ''}}" bindtap="openPodcastPlayer" data-index="{{currentPodcastIndex}}">
+      <view class="mini-cover-wrap">
+        <image class="mini-cover {{isPlaying ? 'spin-slow' : ''}}" src="{{currentPodcast.cover_image || 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=200&q=80'}}" mode="aspectFill"></image>
+      </view>
+      <view class="mini-info">
+        <view class="mini-title">{{currentPodcast.title || 'The Daily Deep Dive'}}</view>
+        <view class="mini-sub">Brian & Jessica</view>
+      </view>
+      <view class="mini-play-btn" catchtap="togglePlay">
+        <image src="/assets/icons/{{isPlaying ? 'pause' : 'play_arrow'}}.svg" class="mini-play-icon-img" mode="aspectFit"></image>
+      </view>
+      <view class="mini-progress-bar">
+        <view class="mini-progress-fill" style="width: {{podcastProgress}}%;"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== 全屏播放器 (Full Player) ==================== -->
+  <view class="full-player {{showFullPlayer ? 'full-player-show' : ''}}">
+    <!-- Aurora top overlay -->
+    <view class="fp-aurora"></view>
+
+    <!-- Nav bar -->
+    <view class="fp-nav">
+      <view class="fp-nav-btn" bindtap="closePodcastPlayer">
+        <image src="/assets/icons/arrow_down.svg" class="fp-nav-icon-img" mode="aspectFit"></image>
+      </view>
+      <view class="fp-nav-center">
+        <view class="fp-dots">
+          <view class="fp-dot {{!isOnScriptPage ? 'fp-dot-active' : ''}}"></view>
+          <view class="fp-dot {{isOnScriptPage ? 'fp-dot-active' : ''}}"></view>
+        </view>
+        <view class="fp-now-playing">Now Playing</view>
+      </view>
+      <view class="fp-nav-btn" bindtap="togglePlayerPage">
+        <text class="ph-bold {{isOnScriptPage ? 'ph-vinyl-record' : 'ph-text-align-left'}} fp-nav-icon"></text>
+      </view>
+    </view>
+
+    <!-- Swipe pages -->
+    <scroll-view class="fp-swipe" scroll-x scroll-with-animation show-scrollbar="{{false}}"
+      bindscroll="onPlayerScroll" bindscrollend="onPlayerScrollEnd" scroll-left="{{playerScrollLeft}}">
+
+      <!-- Page 1: Cover + Visualizer -->
+      <view class="fp-page">
+        <!-- Vinyl cover -->
+        <view class="fp-vinyl-wrap">
+          <image class="fp-vinyl {{isPlaying ? 'spin-slow' : ''}}" src="{{currentPodcast.cover_image || 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?auto=format&fit=crop&w=600&q=80'}}" mode="aspectFill"></image>
+          <view class="fp-vinyl-hole"></view>
+        </view>
+
+        <!-- Title -->
+        <view class="fp-title-area">
+          <view class="fp-title">{{currentPodcast.title || 'The Daily Deep Dive'}}</view>
+          <view class="fp-hosts">
+            <text class="ph-fill ph-microphone-stage fp-host-icon"></text>
+            <text class="fp-host-name">Brian & Jessica</text>
+          </view>
+        </view>
+
+        <!-- Visualizer bars -->
+        <view class="fp-visualizer">
+          <view class="fp-bar fp-bar-1 {{isPlaying ? 'fp-bar-playing' : ''}}"></view>
+          <view class="fp-bar fp-bar-2 {{isPlaying ? 'fp-bar-playing' : ''}}"></view>
+          <view class="fp-bar fp-bar-3 {{isPlaying ? 'fp-bar-playing' : ''}}"></view>
+          <view class="fp-bar fp-bar-4 {{isPlaying ? 'fp-bar-playing' : ''}}"></view>
+          <view class="fp-bar fp-bar-5 {{isPlaying ? 'fp-bar-playing' : ''}}"></view>
+        </view>
+      </view>
+
+      <!-- Page 2: Script + Source Articles -->
+      <scroll-view class="fp-page fp-page-script" scroll-y>
+        <!-- Source Articles -->
+        <view class="fp-section-label">
+          <text class="ph-bold ph-link fp-section-icon"></text> Source Articles
+        </view>
+        <view class="fp-news-list">
+          <view class="fp-news-item tap-effect" wx:for="{{currentPodcast.news}}" wx:key="id" bindtap="jumpToNewsFromPodcast" data-id="{{item.id}}">
+            <image class="fp-news-cover" src="{{item.cover_image || ''}}" mode="aspectFill"></image>
+            <view class="fp-news-info">
+              <view class="fp-news-cat" style="{{item.catStyle}}">{{item.category}}</view>
+              <view class="fp-news-title">{{item.title}}</view>
+            </view>
+            <text class="ph-bold ph-caret-right fp-news-arrow"></text>
+          </view>
+          <view class="fp-news-empty" wx:if="{{!currentPodcast.news || currentPodcast.news.length === 0}}">
+            <text>No source articles</text>
+          </view>
+        </view>
+
+        <!-- Full Transcript -->
+        <view class="fp-section-label fp-transcript-label">
+          <text class="ph-bold ph-file-text fp-section-icon fp-section-icon-purple"></text> Full Transcript
+        </view>
+        <view class="fp-transcript">
+          <block wx:for="{{podcastScriptLines}}" wx:key="index">
+            <view class="fp-script-line">
+              <view class="fp-speaker {{item.speaker === 'Brian' ? 'fp-speaker-blue' : 'fp-speaker-purple'}}">{{item.speaker}}</view>
+              <view class="fp-script-text">{{item.text}}</view>
+            </view>
+          </block>
+          <view class="fp-transcript-empty" wx:if="{{podcastScriptLines.length === 0}}">
+            <text>No transcript available</text>
+          </view>
+        </view>
+      </scroll-view>
+    </scroll-view>
+
+    <!-- Fixed player controls -->
+    <view class="fp-controls">
+      <!-- Progress bar -->
+      <view class="fp-progress-row">
+        <text class="fp-time">{{podcastCurrentTime}}</text>
+        <view class="fp-progress-track" bindtap="seekPodcast">
+          <view class="fp-progress-bg"></view>
+          <view class="fp-progress-fill" style="width: {{podcastProgress}}%;">
+            <view class="fp-progress-thumb"></view>
+          </view>
+        </view>
+        <text class="fp-time">{{currentPodcast.duration_str || '0:00'}}</text>
+      </view>
+
+      <!-- Buttons -->
+      <view class="fp-btn-row">
+        <view class="fp-main-btns">
+          <view bindtap="rewindPodcast"><text class="ph-fill ph-rewind-circle fp-ctrl-md"></text></view>
+          <view class="fp-play-btn {{isPlaying ? 'fp-play-btn-playing' : ''}}" bindtap="togglePlay">
+            <image src="/assets/icons/{{isPlaying ? 'pause' : 'play_arrow'}}.svg" class="fp-play-icon-img" mode="aspectFit"></image>
+          </view>
+          <view bindtap="forwardPodcast"><text class="ph-fill ph-fast-forward-circle fp-ctrl-md"></text></view>
+        </view>
+        <view class="fp-vocab-btn">
+          <text class="ph-bold ph-book-open-text fp-vocab-icon"></text>
+          <view class="fp-vocab-dot" wx:if="{{currentPodcast.vocabulary && currentPodcast.vocabulary.length > 0}}"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== 视图 3: 图谱 (Graph) ==================== -->
+  <view class="view-layer view-graph" style="opacity: {{currentTab === 'graph' ? 1 : 0}}; pointer-events: {{currentTab === 'graph' ? 'auto' : 'none'}};">
+    <view class="graph-header">
+      <view class="gh-title">Intelligence</view>
+      <view class="gh-sub">Discover hidden connections globally.</view>
+      <view class="graph-tabs">
+        <view class="graph-tab {{activeGraphTab === 'network' ? 'active' : ''}}" bindtap="switchGraphTab" data-tab="network">Entity Network</view>
+        <view class="graph-tab {{activeGraphTab === 'trends' ? 'active' : ''}}" bindtap="switchGraphTab" data-tab="trends">Heat Trends</view>
+      </view>
+    </view>
+
+    <!-- ==================== Tab 1: Entity Network ==================== -->
+    <scroll-view scroll-y class="graph-scroll" type="list" show-scrollbar="{{false}}" wx:if="{{activeGraphTab === 'network'}}">
+      <!-- Canvas Knowledge Graph -->
+      <view class="graph-visual-svg">
+        <view class="graph-hint">
+          <view class="hint-dot"></view>
+          <text class="hint-text">Tap nodes to explore</text>
+        </view>
+        <view class="graph-loading-mask" wx:if="{{graphLoading}}">
+          <view class="load-spinner"></view>
+        </view>
+        <view class="graph-empty-state" wx:if="{{false}}">
+          <view class="graph-empty-title">No network data yet</view>
+          <view class="graph-empty-sub">No meaningful entity relationships were found yet.</view>
+        </view>
+        <canvas
+          type="2d"
+          id="graphCanvas"
+          class="graph-canvas-el"
+          bindtouchstart="onGraphTouchStart"
+          bindtouchend="onGraphTouchEnd"
+        ></canvas>
+      </view>
+
+      <!-- Trending Entities Section -->
+      <view class="trending-section">
+        <view class="trending-header">
+          <view>
+            <view class="trending-title">Trending Entities</view>
+            <view class="trending-subtitle">Top relations this week</view>
+          </view>
+          <view class="see-all-btn" bindtap="toggleAllEntities">See All</view>
+        </view>
+
+        <view class="entity-card tap-effect" wx:for="{{trendingEntities}}" wx:key="entity_name" bindtap="openEntityDetail" data-name="{{item.entity_name}}">
+          <view class="entity-rank rank-{{item.rank <= 3 ? 'top' : 'normal'}}">{{item.rank}}</view>
+          <view class="entity-info">
+            <view class="entity-name">{{item.entity_name}}</view>
+            <view class="entity-meta">
+              <view class="entity-type-badge type-{{item.color}}">{{item.entity_type}}</view>
+              <text class="entity-count">{{item.article_count}} articles</text>
+            </view>
+          </view>
+          <text class="ph-bold ph-trend-{{item.trend === 'up' ? 'up' : item.trend === 'down' ? 'down' : 'minus'}} trend-icon trend-{{item.trend}}"></text>
+        </view>
+
+        <view class="empty-tip" wx:if="{{trendingEntities.length === 0 && !graphLoading}}">No trending entities yet</view>
+        <view class="load-more-footer" wx:if="{{graphLoading}}">
+          <view class="load-spinner"></view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- ==================== Tab 2: Heat Trends ==================== -->
+    <scroll-view scroll-y class="graph-scroll" type="list" show-scrollbar="{{false}}" wx:if="{{activeGraphTab === 'trends'}}">
+      <view class="trends-container">
+        <!-- Topic Selector -->
+        <view class="trends-topic-selector" wx:if="{{trendsTopics.length > 0}}">
+          <scroll-view scroll-x enable-flex="true" class="topic-scroll" show-scrollbar="{{false}}">
+            <view class="topic-list">
+              <view class="topic-pill {{activeTrendsTopic === item ? 'active' : ''}}"
+                wx:for="{{trendsTopics}}" wx:key="*this"
+                bindtap="switchTrendsTopic" data-topic="{{item}}">{{item}}</view>
+            </view>
+          </scroll-view>
+        </view>
+
+        <view class="trends-topic-header" wx:if="{{activeTrendsTopic}}">
+          <view class="trends-topic-title">Topic: "{{activeTrendsTopic}}"</view>
+          <view class="trends-topic-desc">Daily heat score based on news tags & content.</view>
+        </view>
+
+        <!-- Chart Card -->
+        <view class="trends-chart-card" wx:if="{{trendsData.length > 0}}">
+          <view class="chart-header">
+            <view class="chart-stat">
+              <text class="stat-number">{{trendsTotalMentions}}</text>
+              <text class="stat-label">Today</text>
+            </view>
+            <view class="chart-badge {{trendsDelta > 0 ? 'badge-up' : (trendsDelta < 0 ? 'badge-down' : 'badge-flat')}}">
+              <view class="chart-badge-icon">
+                <image
+                  class="chart-trend-icon {{trendsDelta > 0 ? 'trend-icon-up' : (trendsDelta < 0 ? 'trend-icon-down' : 'trend-icon-flat')}}"
+                  src="/assets/icons/{{trendsDelta > 0 ? 'trending_up' : (trendsDelta < 0 ? 'trending_down' : 'trending_flat')}}.svg"
+                  mode="aspectFit"
+                ></image>
+              </view>
+              <view class="chart-badge-copy">
+                <view class="chart-badge-value">{{trendsDelta > 0 ? '+' : (trendsDelta < 0 ? '-' : '')}}{{trendsDeltaAbs}}%</view>
+                <view class="chart-badge-label">from yesterday</view>
+              </view>
+            </view>
+          </view>
+
+          <!-- Simple Chart Visualization -->
+          <view class="chart-area">
+            <view class="chart-grid">
+              <view class="grid-line"></view>
+              <view class="grid-line"></view>
+              <view class="grid-line"></view>
+              <view class="grid-line"></view>
+            </view>
+            <view class="chart-columns">
+              <view class="chart-column" wx:for="{{trendsData}}" wx:key="index">
+                <view class="chart-bar" style="height: {{item.barHeight}}rpx;">
+                  <view class="bar-fill {{item.isPeak ? 'bar-fill-peak' : ''}}"></view>
+                </view>
+                <text class="chart-label {{item.label ? '' : 'chart-label-placeholder'}}">{{item.label}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- Insight Card -->
+        <view class="insight-card" wx:if="{{trendsInsight}}">
+          <text class="ph-fill ph-lightbulb insight-icon"></text>
+          <view class="insight-content">
+            <view class="insight-title">AI Insights</view>
+            <view class="insight-text">{{trendsInsight}}</view>
+          </view>
+        </view>
+
+        <view class="empty-tip" wx:if="{{trendsData.length === 0 && !trendsLoading}}">No trend data available for "{{activeTrendsTopic}}"</view>
+        <view class="load-more-footer" wx:if="{{trendsLoading}}">
+          <view class="load-spinner"></view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- ==================== 视图 4: 我的 (Me) ==================== -->
+  <view class="view-layer view-me" style="opacity: {{currentTab === 'me' ? 1 : 0}}; pointer-events: {{currentTab === 'me' ? 'auto' : 'none'}};">
+
+    <!-- ===== 未登录状态 ===== -->
+    <view class="me-login-wall" wx:if="{{!userInfo}}">
+      <view class="me-login-icon"><text class="ph-fill ph-user-circle"></text></view>
+      <view class="me-login-title">Sign in to track your progress</view>
+      <view class="me-login-desc">Login with WeChat to save your reading history and vocabulary.</view>
+      <button class="me-login-btn" bindtap="wxLogin" loading="{{loginLoading}}">
+        <text class="ph-fill ph-wechat-logo me-login-btn-icon"></text> Login with WeChat
+      </button>
+    </view>
+
+    <!-- ===== 已登录状态 ===== -->
+    <block wx:else>
+      <!-- Header -->
+      <view class="me-header">
+        <view class="avatar-row">
+          <view class="avatar-wrap" bindtap="openProfileModal">
+            <image class="avatar" src="{{userInfo.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=user'}}" mode="aspectFill"></image>
+          </view>
+          <view class="m-info">
+            <view class="m-name">{{userInfo.nickname || 'Reader'}}</view>
+            <view class="m-lvl"><text class="ph-fill ph-newspaper"></text> News Learner</view>
+          </view>
+          <view class="m-settings" bindtap="logout"><text class="ph-bold ph-sign-out"></text></view>
+        </view>
+        <view class="stats-box">
+          <view class="s-item">
+            <text class="s-num">{{readingHistory.length}}</text>
+            <text class="s-lab">Articles Read</text>
+          </view>
+        </view>
+      </view>
+
+      <scroll-view scroll-y class="me-scroll" type="list" show-scrollbar="{{false}}">
+        <!-- Reading History Section -->
+        <view class="me-section-title">Reading History</view>
+
+        <!-- Loading -->
+        <view class="me-history-loading" wx:if="{{historyLoading}}">
+          <view class="load-spinner"></view>
+        </view>
+
+        <!-- Empty -->
+        <view class="me-history-empty" wx:elif="{{readingHistory.length === 0}}">
+          <text class="ph-fill ph-newspaper-clipping me-empty-icon"></text>
+          <view>No articles read yet. Start exploring!</view>
+        </view>
+
+        <!-- History List -->
+        <view wx:else>
+          <view class="me-history-item" wx:for="{{readingHistory}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+            <image class="me-history-cover" src="{{item.cover_image}}" mode="aspectFill"></image>
+            <view class="me-history-info">
+              <view class="tag-small" style="{{item.catStyle}}">{{item.category}}</view>
+              <view class="me-history-title">{{item.title}}</view>
+              <view class="me-history-meta">{{item.formatted_read_at}} • {{item.source || 'AI News'}}</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+  </view>
+
+  <!-- ==================== Profile Modal ==================== -->
+  <view class="overlay {{showProfileModal ? 'show' : ''}}" bindtap="closeProfileModal"></view>
+  <view class="bottom-sheet profile-sheet {{showProfileModal ? 'show' : ''}}">
+    <view class="sheet-handle" bindtap="closeProfileModal">
+      <view class="handle-bar"></view>
+    </view>
+    <view class="profile-modal-content">
+      <!-- 用户信息头部 -->
+      <view class="profile-modal-header">
+        <view class="profile-modal-avatar-wrap">
+          <image class="profile-modal-avatar" src="{{userInfo.avatar_url || 'https://api.dicebear.com/7.x/avataaars/svg?seed=user'}}" mode="aspectFill"></image>
+        </view>
+        <view class="profile-modal-name">{{userInfo.nickname || 'Reader'}}</view>
+        <view class="profile-modal-sub"><text class="ph-fill ph-newspaper"></text> News Learner</view>
+      </view>
+      <!-- 分割线 -->
+      <view class="profile-modal-divider"></view>
+      <!-- 退出登录按钮 -->
+      <view class="profile-modal-logout-btn" bindtap="logout">
+        <text class="ph-bold ph-sign-out profile-modal-logout-icon"></text>
+        <text class="profile-modal-logout-text">Sign Out</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== Entity Detail Bottom Sheet ==================== -->
+  <view class="overlay {{showEntityDetail ? 'show' : ''}}" bindtap="closeEntityDetail"></view>
+  <view class="bottom-sheet entity-detail-sheet {{showEntityDetail ? 'show' : ''}}">
+    <view class="sheet-handle" bindtap="closeEntityDetail">
+      <view class="handle-bar"></view>
+    </view>
+
+    <view class="entity-detail-content">
+      <view class="entity-detail-header">
+        <view class="entity-detail-main">
+          <view class="entity-type-badge-lg type-{{selectedEntity.color}}">{{selectedEntity.type}}</view>
+          <view class="entity-detail-name">{{selectedEntity.name}}</view>
+        </view>
+        <view class="entity-icon-wrap icon-{{selectedEntity.color}}" bindtap="closeEntityDetail">
+          <image src="/assets/icons/arrow_down.svg" class="entity-close-icon" mode="aspectFit"></image>
+        </view>
+      </view>
+
+      <!-- Related Articles in Entity Detail -->
+      <view wx:if="{{selectedEntity.articles && selectedEntity.articles.length > 0}}">
+        <view class="entity-articles-label">Related Articles</view>
+        <view class="entity-article-item tap-effect" wx:for="{{selectedEntity.articles}}" wx:key="id"
+          bindtap="goToDetailFromEntity" data-id="{{item.id}}">
+          <view class="entity-article-info">
+            <view class="tag-small" style="{{item.catStyle}}">{{item.category}}</view>
+            <view class="entity-article-title">{{item.simple_title || item.title}}</view>
+            <view class="entity-article-meta">{{item.formatted_time}}</view>
+          </view>
+          <image class="entity-article-cover" src="{{item.cover_image}}" mode="aspectFill"></image>
+        </view>
+      </view>
+      <view class="entity-articles-loading" wx:elif="{{selectedEntity.articlesLoading}}">
+        <view class="load-spinner"></view>
+      </view>
+
+      <view class="entity-actions">
+        <view class="entity-action-btn primary" bindtap="readEntityArticles">Read Articles</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ==================== 全局底部导航栏 ==================== -->
+  <view class="bottom-nav {{showDetail ? 'hidden-nav' : ''}}">
+    <view class="nav-btn {{currentTab === 'home' ? 'active' : ''}}" bindtap="switchTab" data-tab="home">
+      <image class="nav-icon" src="/assets/icons/{{currentTab === 'home' ? 'home_activated' : 'home_default'}}.svg" mode="aspectFit"></image>
+      <text class="nav-label">Home</text>
+    </view>
+    <view class="nav-btn {{currentTab === 'podcast' ? 'active' : ''}}" bindtap="switchTab" data-tab="podcast">
+      <image class="nav-icon" src="/assets/icons/{{currentTab === 'podcast' ? 'podcast_activated' : 'podcast_default'}}.svg" mode="aspectFit"></image>
+      <text class="nav-label">Podcast</text>
+    </view>
+    <view class="nav-btn {{currentTab === 'graph' ? 'active' : ''}}" bindtap="switchTab" data-tab="graph">
+      <image class="nav-icon" src="/assets/icons/{{currentTab === 'graph' ? 'graph_activated' : 'graph_default'}}.svg" mode="aspectFit"></image>
+      <text class="nav-label">Graph</text>
+    </view>
+    <view class="nav-btn {{currentTab === 'me' ? 'active' : ''}}" bindtap="switchTab" data-tab="me">
+      <image class="nav-icon" src="/assets/icons/{{currentTab === 'me' ? 'me_activated' : 'me_default'}}.svg" mode="aspectFit"></image>
+      <text class="nav-label">Me</text>
+    </view>
+  </view>
+
+  <!-- ==================== 新闻详情层 ==================== -->
+  <view class="detail-layer {{showDetail ? 'show' : ''}}">
+    <!-- Header -->
+    <view class="detail-header">
+      <view class="dh-btn dh-back-btn" bindtap="goBack">
+        <image src="/assets/icons/arrow-left.svg" class="dh-back-icon" mode="aspectFit"></image>
+      </view>
+      <view class="dh-title">Article Details</view>
+      <view style="width: 64rpx; flex-shrink: 0;"></view>
+    </view>
+
+    <scroll-view scroll-y class="detail-scroll" type="list" show-scrollbar="{{false}}">
+      <image src="{{selectedNews.cover_image}}" mode="aspectFill" class="detail-cover"></image>
+
+      <view class="detail-padding">
+        <!-- Article Header -->
+        <view class="d-header-row">
+          <view class="d-category-tag" style="{{selectedNews.catStyle}}">{{selectedNews.category}}</view>
+          <text class="d-source" wx:if="{{selectedNews.source}}">{{selectedNews.source}}</text>
+        </view>
+        <view class="d-title">
+          <text wx:for="{{selectedNews.titleTokens}}" wx:key="id" wx:for-item="token" class="{{token.isWord ? 'tap-word tap-word-title' : ''}}" bindtap="tapWord" data-text="{{token.text}}" data-is-word="{{token.isWord}}">{{token.text}}</text>
+        </view>
+        <view class="d-meta-row">
+          <view class="d-meta">
+            <text class="ph ph-clock"></text> {{selectedNews.formatted_time}}
+            <text class="d-meta-sep">•</text>
+            <text>{{selectedNews.view_count || 0}} views</text>
+          </view>
+          <view class="d-meta-btns" wx:if="{{selectedNews.original_url}}">
+            <view class="d-source-btn" bindtap="openSourceUrl">
+              <text class="ph ph-arrow-square-out d-source-btn-icon"></text>
+              <text>Source</text>
+            </view>
+            <view class="d-source-btn" bindtap="copySourceUrl">
+              <text class="ph ph-copy d-source-btn-icon"></text>
+              <text>Copy Link</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- AI Summary -->
+        <view class="ai-summary">
+          <view class="ai-tag"><text class="ph-fill ph-sparkle"></text> AI Summary</view>
+          <view class="ai-text">
+            <text wx:for="{{selectedNews.summaryTokens}}" wx:key="id" wx:for-item="token" class="{{token.isWord ? 'tap-word' : ''}}" bindtap="tapWord" data-text="{{token.text}}" data-is-word="{{token.isWord}}">{{token.text}}</text>
+          </view>
+        </view>
+
+        <!-- Full Article Content with clickable words -->
+        <view class="article-full" wx:if="{{selectedNews.contentParagraphs && selectedNews.contentParagraphs.length > 0}}">
+          <view class="article-full-label">Full Article</view>
+          <view class="article-paragraph" wx:for="{{selectedNews.contentParagraphs}}" wx:key="id" wx:for-item="para">
+            <text wx:for="{{para.words}}" wx:key="id" wx:for-item="token" class="{{token.isWord ? 'tap-word' : ''}}" bindtap="tapWord" data-text="{{token.text}}" data-is-word="{{token.isWord}}">{{token.text}}</text>
+          </view>
+        </view>
+
+        <!-- Multi-dimensional Analysis Tabs -->
+        <view class="tabs-header">
+          <view class="tab {{activeDetailTab === 'wiki' ? 'active' : ''}}" bindtap="switchDetailTab" data-tab="wiki">Entity Wiki</view>
+          <view class="tab {{activeDetailTab === 'views' ? 'active' : ''}}" bindtap="switchDetailTab" data-tab="views">Viewpoints</view>
+        </view>
+
+        <!-- Tab: Entity Wiki -->
+        <view wx:if="{{activeDetailTab === 'wiki'}}">
+          <view wx:if="{{selectedNews.background_info && selectedNews.background_info.length > 0}}">
+            <view class="wiki-card" wx:for="{{selectedNews.background_info}}" wx:key="id" wx:for-item="entity">
+              <text class="ph-fill ph-bank wiki-icon"></text>
+              <view class="wiki-info">
+                <view class="wiki-name">{{entity.entity_name}}<text class="wiki-type" wx:if="{{entity.entity_type}}"> · {{entity.entity_type}}</text></view>
+                <view class="wiki-desc">{{entity.description}}</view>
+              </view>
+            </view>
+          </view>
+          <view wx:else class="empty-tip">No entity info available</view>
+        </view>
+
+        <!-- Tab: Viewpoints -->
+        <view wx:if="{{activeDetailTab === 'views'}}">
+          <view wx:if="{{selectedNews.viewpoint_analysis && selectedNews.viewpoint_analysis.length > 0}}">
+            <view class="viewpoint-card" wx:for="{{selectedNews.viewpoint_analysis}}" wx:key="id" wx:for-item="vp">
+              <view class="vp-top">
+                <text class="vp-name">{{vp.entity_name}}</text>
+                <view class="vp-badge {{vp.sentiment === 'Positive' ? 'positive' : vp.sentiment === 'Negative' ? 'warning' : 'neutral'}}">
+                  <text class="ph-fill {{vp.sentiment === 'Positive' ? 'ph-thumbs-up' : vp.sentiment === 'Negative' ? 'ph-warning-circle' : 'ph-minus-circle'}}"></text> {{vp.sentiment}}
+                </view>
+              </view>
+              <view class="vp-desc">{{vp.viewpoint}}</view>
+            </view>
+          </view>
+          <view wx:else class="empty-tip">No viewpoints available</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- FAB: AI Chat -->
+    <view class="fab-chat" bindtap="toggleChat">
+      <image src="/assets/icons/ai_chat.svg" class="fab-icon" mode="aspectFit"></image>
+    </view>
+  </view>
+
+
+</view>
+
+<!-- ==================== 模态框: 分类菜单 ==================== -->
+<view class="overlay {{showCategorySheet ? 'show' : ''}}" bindtap="toggleCategorySheet"></view>
+<view class="bottom-sheet cat-sheet {{showCategorySheet ? 'show' : ''}}">
+  <view class="sheet-header">
+    <text class="sheet-title">All Categories</text>
+    <view class="sheet-close" bindtap="toggleCategorySheet">
+      <image src="/assets/icons/close.svg" class="sheet-close-icon" mode="aspectFit"></image>
+    </view>
+  </view>
+  <view class="cat-grid">
+    <view class="cat-grid-btn {{activeCat === 'All' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="All">All News</view>
+    <view class="cat-grid-btn {{activeCat === 'Technology' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Technology">Technology</view>
+    <view class="cat-grid-btn {{activeCat === 'Business' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Business">Business</view>
+    <view class="cat-grid-btn {{activeCat === 'Sport' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Sport">Sport</view>
+    <view class="cat-grid-btn {{activeCat === 'Health' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Health">Health</view>
+    <view class="cat-grid-btn {{activeCat === 'Politics' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Politics">Politics</view>
+    <view class="cat-grid-btn {{activeCat === 'Science' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Science">Science</view>
+    <view class="cat-grid-btn {{activeCat === 'Culture' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Culture">Culture</view>
+    <view class="cat-grid-btn {{activeCat === 'Environment' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Environment">Environment</view>
+    <view class="cat-grid-btn {{activeCat === 'Entertainment' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Entertainment">Entertainment</view>
+    <view class="cat-grid-btn {{activeCat === 'Travel' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Travel">Travel</view>
+    <view class="cat-grid-btn {{activeCat === 'Arts' ? 'active' : ''}}" bindtap="switchCatFromSheet" data-cat="Arts">Arts</view>
+  </view>
+</view>
+
+<!-- ==================== 模态框: 词典 ==================== -->
+<view class="overlay {{showDict ? 'show' : ''}}" bindtap="closeDict"></view>
+<view class="bottom-sheet dict-sheet {{showDict ? 'show' : ''}}">
+  <view class="dict-handle" bindtap="closeDict">
+    <view class="handle-bar"></view>
+  </view>
+  <scroll-view scroll-y class="dict-content" show-scrollbar="{{false}}">
+    <view class="dict-top">
+      <view class="word-main">{{selectedWord.word}}</view>
+      <view class="word-close-btn" bindtap="closeDict">
+        <image src="/assets/icons/close.svg" class="word-close-icon" mode="aspectFit"></image>
+      </view>
+    </view>
+    <view class="word-phonetics-row">
+      <view class="word-phonetic-item" wx:if="{{selectedWord.phoneticUK}}">
+        <text class="phonetic-label">英</text>
+        <text class="phonetic-text">/{{selectedWord.phoneticUK}}/</text>
+        <view class="word-play-btn" bindtap="playWordAudio" data-type="uk">
+          <image src="/assets/icons/play_pronunciation.svg" class="play-icon" mode="aspectFit"></image>
+        </view>
+      </view>
+      <view class="word-phonetic-item" wx:if="{{selectedWord.phoneticUS}}">
+        <text class="phonetic-label">美</text>
+        <text class="phonetic-text">/{{selectedWord.phoneticUS}}/</text>
+        <view class="word-play-btn" bindtap="playWordAudio" data-type="us">
+          <image src="/assets/icons/play_pronunciation.svg" class="play-icon" mode="aspectFit"></image>
+        </view>
+      </view>
+    </view>
+    <view class="dict-loading" wx:if="{{selectedWord.loading}}">
+      <view class="load-spinner"></view>
+    </view>
+    <view wx:if="{{!selectedWord.loading && selectedWord.definitions.length > 0}}">
+      <view class="dict-pos-block" wx:for="{{selectedWord.definitions}}" wx:key="partOfSpeech" wx:for-item="def">
+        <view class="dict-pos-label">{{def.partOfSpeech}}</view>
+        <view class="dict-meaning-item" wx:for="{{def.meanings}}" wx:key="index" wx:for-item="m">
+          <view class="dict-def-text">{{m.def}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="dict-example-section" wx:if="{{!selectedWord.loading && selectedWord.examples.length > 0}}">
+      <view class="dict-section-title">Examples</view>
+      <view class="dict-example-card" wx:for="{{selectedWord.examples}}" wx:key="index" wx:for-item="item">
+        <text class="dict-example-en">"{{item.en}}"</text>
+        <text class="dict-example-cn">{{item.cn}}</text>
+      </view>
+    </view>
+    <view class="word-trans" wx:if="{{!selectedWord.loading && selectedWord.translation && selectedWord.definitions.length === 0}}">{{selectedWord.translation}}</view>
+    <view class="dict-no-result" wx:if="{{!selectedWord.loading && selectedWord.definitions.length === 0 && !selectedWord.translation}}">
+      <text>No definition found</text>
+    </view>
+  </scroll-view>
+</view>
+
+<!-- ==================== 模态框: AI 对话 ==================== -->
+<view class="overlay {{showChat ? 'show' : ''}}" bindtap="closeChat"></view>
+<view class="bottom-sheet chat-sheet {{showChat ? 'show' : ''}}">
+  <view class="chat-header">
+    <view class="chat-avatar">
+      <image src="/assets/icons/ai_bot.svg" class="chat-avatar-icon" mode="aspectFit"></image>
+    </view>
+    <view class="chat-header-info">
+      <text class="chat-title">AI Tutor</text>
+      <view class="chat-web-badge"><text class="ph-fill ph-globe-hemisphere-west"></text> Web Search On</view>
+    </view>
+    <view class="chat-clear-btn" bindtap="clearChat"><text class="ph-bold ph-trash"></text></view>
+    <view class="sheet-close" bindtap="closeChat">
+      <image src="/assets/icons/arrow_down.svg" class="chat-close-icon" mode="aspectFit"></image>
+    </view>
+  </view>
+
+  <scroll-view scroll-y class="chat-messages" type="list" show-scrollbar="{{false}}"
+    scroll-into-view="{{chatScrollTarget}}" scroll-with-animation="{{true}}">
+    <view class="chat-messages-inner">
+
+      <!-- Suggested questions (only before first message) -->
+      <view class="chat-suggestions" wx:if="{{chatMessages.length === 0 && selectedNews.qa_suggestions && selectedNews.qa_suggestions.length > 0}}">
+        <text class="suggestions-label">Suggested Questions</text>
+        <view class="suggestion-btn" wx:for="{{selectedNews.qa_suggestions}}" wx:key="index"
+          bindtap="sendSuggestion" data-text="{{item}}">{{item}}</view>
+      </view>
+
+      <!-- Welcome message -->
+      <view class="chat-msg ai-msg" wx:if="{{chatMessages.length === 0}}">
+        <view class="chat-avatar-sm"><image src="/assets/icons/ai_bot.svg" class="chat-avatar-sm-icon" mode="aspectFit"></image></view>
+        <view class="msg-bubble ai-bubble">Hi! I can answer questions about this article or anything else — I'm connected to the web. What would you like to know?</view>
+      </view>
+
+      <!-- Conversation history -->
+      <block wx:for="{{chatMessages}}" wx:key="id" wx:for-item="msg">
+        <!-- User message -->
+        <view class="chat-msg user-msg" wx:if="{{msg.role === 'user'}}" id="chat-msg-{{msg.id}}">
+          <view class="msg-bubble user-bubble">{{msg.content}}</view>
+        </view>
+        <!-- AI message -->
+        <view class="chat-msg ai-msg" wx:elif="{{msg.role === 'assistant'}}" id="chat-msg-{{msg.id}}">
+          <view class="chat-avatar-sm"><image src="/assets/icons/ai_bot.svg" class="chat-avatar-sm-icon" mode="aspectFit"></image></view>
+          <view class="msg-bubble ai-bubble">{{msg.content}}</view>
+        </view>
+      </block>
+
+      <!-- Loading indicator -->
+      <view class="chat-msg ai-msg" wx:if="{{chatLoading}}">
+        <view class="chat-avatar-sm"><image src="/assets/icons/ai_bot.svg" class="chat-avatar-sm-icon" mode="aspectFit"></image></view>
+        <view class="msg-bubble ai-bubble chat-loading-bubble">
+          <view class="chat-dot-1 chat-dot"></view>
+          <view class="chat-dot-2 chat-dot"></view>
+          <view class="chat-dot-3 chat-dot"></view>
+        </view>
+      </view>
+
+      <!-- Scroll anchor -->
+      <view id="chat-bottom" style="height: 1rpx;"></view>
+    </view>
+  </scroll-view>
+
+  <view class="chat-input-row">
+    <input class="chat-input" value="{{chatInput}}" placeholder="Ask AI anything..."
+      placeholder-class="chat-placeholder" bindinput="onChatInput"
+      confirm-type="send" bindconfirm="sendChat" />
+    <view class="chat-send {{chatLoading ? 'chat-send-disabled' : ''}}" bindtap="sendChat">
+      <image src="/assets/icons/upload.svg" class="chat-send-icon" mode="aspectFit"></image>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,10 @@
+<view class="container">
+  <view class="nav-bar">
+    <view class="back-btn" bindtap="goBack">
+      <image src="/assets/icons/arrow-left.svg" class="back-icon" mode="aspectFit"></image>
+    </view>
+    <view class="nav-title">原文</view>
+    <view style="width: 64rpx;"></view>
+  </view>
+  <web-view src="{{url}}"></web-view>
+</view>
