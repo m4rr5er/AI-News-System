@@ -1,0 +1,75 @@
+{
+  "script": "Host_A: Hey everyone, welcome back! I'm Brian.\nHost_B: And I'm Jessica. We've got some fascinating stories today that will make you rethink everything from dining etiquette to ancient cities.\nHost_A: Let's dive in.\n\nHost_B: So Brian, have you ever heard of Toronto's PATH? It's this massive underground network that's basically a city within a city.\nHost_A: Oh yeah, I've heard about it! The article says it's 30 kilometers of tunnels connecting everything from offices to shops.\nHost_B: Right! And during winter, thousands of workers basically live underground, which is why people joke about them being 'mole people'.\nHost_A: That's wild! The article mentions some locals don't even wear proper winter coats because they spend so much time down there.\nHost_B: Totally! There's this Brazilian guy who moved there and only wears a light raincoat in winter. He hasn't even bought snow boots!\nHost_A: No way! What about the navigation issues? I've heard it's confusing to get around.\nHost_B: For sure! One guy actually created his own app because he kept getting lost. The PATH is so big it was considered the world's largest underground network until Montreal recently took the title.\n\nHost_A: Speaking of underground cities, have you seen the article about Ephesus in Turkey? It's 10 times the size of Disneyland!\nHost_B: Are you serious? That's incredible. The article says it was a major trading hub with over 70,000 ships visiting during summer.\nHost_A: Right! And it's incredibly well-preserved. They have this stunning library that's 56 feet tall with more than 12,000 scrolls before it was destroyed by fire.\nHost_B: And the most interesting part? There's a carving across from the library that's basically one of the world's earliest advertisements for a brothel!\nHost_A: That's hilarious! What about those public latrines with 36 holes?\nHost_B: I know! The article mentions people used a sponge on a stick dipped in vinegar to clean themselves. Romans really took their hygiene seriously.\nHost_A: Totally. And they're planning to reconnect the harbor to the sea after 2,000 years!\n\nHost_B: Okay, from ancient Roman cities to modern dining etiquette. Brian, did you know there's a whole debate about how to hold your fork and knife?\nHost_A: Oh yeah, the American versus Continental style. I'm definitely a zigzag guy - cut, switch hands, eat.\nHost_B: Right! But in Europe, they keep the fork in their left hand with tines down the whole time. The article says Americans get made fun of for being 'loud ladies stabbing things'.\nHost_A: That's funny! I never realized how much it varies. The British have their own style too, where fork tines should never face upward in formal settings.\nHost_B: For sure! And there are all these signals for when you're resting versus finished with your meal. In American style, you place your knife and fork in a specific position.\nHost_A: I had no idea it was so complicated. The article says etiquette is really about making guests comfortable, not about being perfect.\nHost_B: Right!! Though I think I'll stick with my zigzag style - it's what I know!\n\nHost_A: Speaking of controversial topics, Jessica, have you seen this about Sydney banning bikinis on buses?\nHost_B: Are you serious? That seems a bit much. The article says it's because passengers found it 'confronting' and 'off-putting'.\nHost_A: Right! But where do you draw the line? What about activewear? The article mentions this has been a debate since the 1960s 'bikini war'.\nHost_B: I know! It's interesting how standards of decency change over time. One person's 'confronting' is another's normal beachwear.\nHost_A: Totally. And it's not just Australia - there was a call to ban G-string bikinis on the Gold Coast too.\nHost_B: That's wild. I guess public transport really brings out strong opinions about what's appropriate!\n\nHost_A: And finally, a survival story for you. Jessica, what would you do if you got trapped in a blizzard?\nHost_B: Oh no, that's scary. The article has this story about a woman who drove into a blizzard without checking the forecast.\nHost_A: Right! She got stuck and didn't even have proper winter clothing or blankets. The article says you should check weather conditions a week in advance.\nHost_B: For sure! And if you do get stuck, the key is to stay with your car. Running the motor for 10 minutes each hour for heat, but keeping a window cracked for fresh air.\nHost_A: That's good advice. The article mentions you should never leave your vehicle to walk for help during a blizzard - you could get disoriented.\nHost_B: Totally. And for outdoor activities, they recommend carrying safety gear like a space blanket and whistle. The story ends with the woman actually marrying the boyfriend she had the spat with!\nHost_A: Wow, what a twist! Well, that's all we have for today.\nHost_B: Thanks for listening, everyone. Stay safe out there, whether you're navigating Toronto's PATH or avoiding blizzards!\nHost_A: See you next time!",
+  "vocabulary": [
+    {
+      "word": "underworld",
+      "phonetic": "ˈʌndərwɜːld",
+      "translation": "地下世界",
+      "explanation": "A hidden or secret world beneath the surface, often referring to underground networks or subterranean spaces.",
+      "example_sentence": "Toronto's PATH is a sprawling underground underworld connecting buildings and transit systems."
+    },
+    {
+      "word": "labyrinthine",
+      "phonetic": "ˌlæbəˈrɪnθaɪn",
+      "translation": "迷宫般的",
+      "explanation": "Something that is extremely complex and confusing, like a maze with many paths and turns.",
+      "example_sentence": "The PATH's labyrinthine walkways can be disorienting for new visitors."
+    },
+    {
+      "word": "sartorial",
+      "phonetic": "sɑːrˈtɔːriəl",
+      "translation": "服装的",
+      "explanation": "Relating to tailoring or clothing, especially stylish or fashionable dress.",
+      "example_sentence": "The sartorial choices in Toronto's financial district are quite distinctive."
+    },
+    {
+      "word": "etiquette",
+      "phonetic": "ˈetɪkət",
+      "translation": "礼仪",
+      "explanation": "The customary code of polite behavior in society or among members of a particular profession or group.",
+      "example_sentence": "Proper dining etiquette varies significantly between American and Continental styles."
+    },
+    {
+      "word": "archaeological",
+      "phonetic": "ˌɑːrkiəˈlɒdʒɪkəl",
+      "translation": "考古学的",
+      "explanation": "Relating to or dealing with archaeology, the scientific study of past human cultures through artifacts and physical remains.",
+      "example_sentence": "Ephesus contains remarkable archaeological treasures from the Greco-Roman period."
+    },
+    {
+      "word": "confronting",
+      "phonetic": "kənˈfrʌntɪŋ",
+      "translation": "令人不快的",
+      "explanation": "Causing someone to face or deal with something unpleasant, challenging, or aggressive.",
+      "example_sentence": "Some passengers found people wearing swimwear on buses confronting."
+    },
+    {
+      "word": "blizzard",
+      "phonetic": "ˈblɪzəd",
+      "translation": "暴风雪",
+      "explanation": "A severe snowstorm with high winds and low visibility, typically lasting for several hours.",
+      "example_sentence": "The blizzard reduced visibility to less than a quarter mile for hours."
+    },
+    {
+      "word": "disoriented",
+      "phonetic": "dɪsˈɔːriəntɪd",
+      "translation": "迷失方向的",
+      "explanation": "Confused about the present situation or direction, making it difficult to know where one is or where to go.",
+      "example_sentence": "The heavy snowfall left the hikers completely disoriented."
+    },
+    {
+      "word": "hypothermia",
+      "phonetic": "ˌhaɪpəθɜːmiə",
+      "translation": "体温过低",
+      "explanation": "A dangerous drop in body temperature, typically caused by prolonged exposure to cold temperatures.",
+      "example_sentence": "Prolonged exposure to extreme cold can lead to life-threatening hypothermia."
+    },
+    {
+      "word": "modesty",
+      "phonetic": "ˈmɒdəsti",
+      "translation": "端庄",
+      "explanation": "The quality or state of being unassuming or decent in dress, behavior, or outlook.",
+      "example_sentence": "The ban was reportedly implemented due to concerns about public modesty."
+    }
+  ]
+}

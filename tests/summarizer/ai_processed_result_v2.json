@@ -1,0 +1,311 @@
+{
+  "simple_title": "AI Race Risks Big Problems",
+  "difficulty_score": 5,
+  "tags": [
+    "AI",
+    "disaster",
+    "technology"
+  ],
+  "en_summary": "A leading AI expert warns that the rush to develop artificial intelligence could lead to a disaster similar to the Hindenburg airship crash. Professor Michael Wooldridge says companies are releasing AI tools too quickly, without proper testing, which could damage global trust in the technology. He mentions risks like deadly self-driving car updates or AI hacks that could ground airlines. The expert believes that AI chatbots are not as reliable as they seem and can mislead people because they provide confident answers even when wrong.",
+  "simple_content": "A top AI researcher says the fast race to create artificial intelligence is making a big disaster more likely. Professor Michael Wooldridge from Oxford University warns that companies are under pressure to release new AI tools quickly. They want to get customers before fully understanding the tools' abilities and problems. This rush could cause a disaster like the Hindenburg airship crash in 1937, which destroyed trust in airships. The professor says AI chatbots are not tested enough and are released too fast. He mentions possible problems like dangerous updates for self-driving cars or AI hacks that could stop airlines. AI is used in many systems, so a major issue could affect many areas. The expert does not want to criticize modern AI but points out that current AI is not as reliable as expected. AI chatbots can fail in unexpected ways and do not know when they are wrong. They are designed to give confident answers, which can mislead people. The professor suggests that AI should not be made to seem too human-like. He thinks people should understand that AI is just a tool, not a person.",
+  "qa_suggestions": [
+    "What does Professor Wooldridge say about the speed of AI development?",
+    "What are some possible risks of AI mentioned in the article?",
+    "Why does the professor think AI chatbots can mislead people?"
+  ],
+  "vocabulary": [
+    {
+      "word": "artificial",
+      "phonetic": "/ɑːˈtɪfɪʃl/",
+      "translation": "人工的",
+      "explanation": "made by humans, not natural",
+      "example_sentence": "The company is working on artificial intelligence tools."
+    },
+    {
+      "word": "disaster",
+      "phonetic": "/dɪˈzɑːstər/",
+      "translation": "灾难",
+      "explanation": "a very bad event causing much damage",
+      "example_sentence": "The Hindenburg disaster destroyed global interest in airships."
+    },
+    {
+      "word": "shatters",
+      "phonetic": "/ˈʃætərz/",
+      "translation": "打破",
+      "explanation": "breaks into many pieces",
+      "example_sentence": "The accident shattered the team's confidence."
+    },
+    {
+      "word": "global",
+      "phonetic": "/ˈɡləʊbl/",
+      "translation": "全球的",
+      "explanation": "relating to the whole world",
+      "example_sentence": "The company has global offices."
+    },
+    {
+      "word": "commercial",
+      "phonetic": "/kəˈmɜːʃl/",
+      "translation": "商业的",
+      "explanation": "related to buying and selling",
+      "example_sentence": "The firm faces commercial pressures."
+    },
+    {
+      "word": "release",
+      "phonetic": "/rɪˈliːs/",
+      "translation": "发布",
+      "explanation": "to make something available to the public",
+      "example_sentence": "The company will release new tools soon."
+    },
+    {
+      "word": "desperate",
+      "phonetic": "/ˈdespərət/",
+      "translation": "绝望的",
+      "explanation": "feeling or showing hopelessness",
+      "example_sentence": "They are desperate to win customers."
+    },
+    {
+      "word": "capabilities",
+      "phonetic": "/kəˈpæsəbɪlətiz/",
+      "translation": "能力",
+      "explanation": "the things that someone or something can do",
+      "example_sentence": "We need to understand the tools' capabilities."
+    },
+    {
+      "word": "potential",
+      "phonetic": "/pəˈtenʃl/",
+      "translation": "潜在的",
+      "explanation": "possible in the future",
+      "example_sentence": "The project has potential flaws."
+    },
+    {
+      "word": "flaws",
+      "phonetic": "/flɔːz/",
+      "translation": "缺陷",
+      "explanation": "mistakes or weaknesses",
+      "example_sentence": "The product has some minor flaws."
+    },
+    {
+      "word": "chatbots",
+      "phonetic": "/ˈtʃætbotz/",
+      "translation": "聊天机器人",
+      "explanation": "computer programs that can talk like humans",
+      "example_sentence": "The company uses chatbots for customer service."
+    },
+    {
+      "word": "guardrails",
+      "phonetic": "/ˈɡɑːdraɪlz/",
+      "translation": "护栏",
+      "explanation": "safety barriers",
+      "example_sentence": "The chatbots have guardrails to prevent errors."
+    },
+    {
+      "word": "commercial incentives",
+      "phonetic": "/kəˈmɜːʃl ɪnˈsɛntɪvz/",
+      "translation": "商业激励",
+      "explanation": "reasons to do something for business profit",
+      "example_sentence": "Companies prioritize commercial incentives."
+    },
+    {
+      "word": "cautious",
+      "phonetic": "/ˈkɔːʃəs/",
+      "translation": "谨慎的",
+      "explanation": "careful to avoid danger",
+      "example_sentence": "We need a more cautious approach."
+    },
+    {
+      "word": "safety testing",
+      "phonetic": "/ˈseɪfti ˈtɛstɪŋ/",
+      "translation": "安全测试",
+      "explanation": "checking something for safety",
+      "example_sentence": "The product needs safety testing."
+    },
+    {
+      "word": "classic",
+      "phonetic": "/ˈklæsɪk/",
+      "translation": "经典的",
+      "explanation": "typical of a particular type",
+      "example_sentence": "This is a classic technology scenario."
+    },
+    {
+      "word": "rigorously",
+      "phonetic": "/ˈrɪɡərəsli/",
+      "translation": "严格地",
+      "explanation": "in a very careful and thorough way",
+      "example_sentence": "The product was not rigorously tested."
+    },
+    {
+      "word": "bearable",
+      "phonetic": "/ˈbɛərəbl/",
+      "translation": "可承受的",
+      "explanation": "able to be accepted",
+      "example_sentence": "The pressure is unbearable."
+    },
+    {
+      "word": "deploy",
+      "phonetic": "/dɪˈploi/",
+      "translation": "部署",
+      "explanation": "to use something for a particular purpose",
+      "example_sentence": "Companies rushed to deploy more advanced AI tools."
+    },
+    {
+      "word": "airship",
+      "phonetic": "/ˈɛəʃɪp/",
+      "translation": "飞艇",
+      "explanation": "a large aircraft filled with gas",
+      "example_sentence": "The Hindenburg was a 245-metre airship."
+    },
+    {
+      "word": "Atlantic",
+      "phonetic": "/əˈtlæntɪk/",
+      "translation": "大西洋的",
+      "explanation": "relating to the Atlantic Ocean",
+      "example_sentence": "The airship made round trips across the Atlantic."
+    },
+    {
+      "word": "burst into flames",
+      "phonetic": "/bɜːst ˈɪntu fleɪmz/",
+      "translation": "着火",
+      "explanation": "to suddenly start burning",
+      "example_sentence": "The airship burst into flames in 1937."
+    },
+    {
+      "word": "ground staff",
+      "phonetic": "/ɡraʊnd stɑːf/",
+      "translation": "地面人员",
+      "explanation": "people working on the ground",
+      "example_sentence": "Thirty-six crew, passengers and ground staff died."
+    },
+    {
+      "word": "inferno",
+      "phonetic": "/ɪnˈfɜːrnoʊ/",
+      "translation": "地狱之火",
+      "explanation": "a very large fire",
+      "example_sentence": "The inferno was caused by a spark."
+    },
+    {
+      "word": "hydrogen",
+      "phonetic": "/ˈhaɪdrədʒən/",
+      "translation": "氢气",
+      "explanation": "a light gas",
+      "example_sentence": "Hydrogen kept the airship aloft."
+    },
+    {
+      "word": "aloft",
+      "phonetic": "/əˈlɒft/",
+      "translation": "在空中",
+      "explanation": "in the air",
+      "example_sentence": "The airship was aloft for many hours."
+    },
+    {
+      "word": "embedded",
+      "phonetic": "/ɪmˈbɛdɪd/",
+      "translation": "嵌入的",
+      "explanation": "fixed firmly in something",
+      "example_sentence": "AI is embedded in many systems."
+    },
+    {
+      "word": "deadly",
+      "phonetic": "/ˈdɛli/",
+      "translation": "致命的",
+      "explanation": "causing death",
+      "example_sentence": "A deadly software update could harm cars."
+    },
+    {
+      "word": "hack",
+      "phonetic": "/hæk/",
+      "translation": "黑客攻击",
+      "explanation": "to illegally access a computer system",
+      "example_sentence": "An AI-powered hack could ground airlines."
+    },
+    {
+      "word": "Barings bank",
+      "phonetic": "/ˈbɛərɪŋz bæŋk/",
+      "translation": "巴林银行",
+      "explanation": "a bank that failed due to a trading error",
+      "example_sentence": "A Barings bank-style collapse could happen."
+    },
+    {
+      "word": "stupid",
+      "phonetic": "/ˈstuːpɪd/",
+      "translation": "愚蠢的",
+      "explanation": "lacking intelligence",
+      "example_sentence": "AI doing something stupid could cause problems."
+    }
+  ],
+  "background_info": [
+    {
+      "entity_name": "Hindenburg",
+      "entity_type": "airship",
+      "description": "A large German airship that exploded in 1937, killing 36 people.",
+      "is_web_searched": true
+    },
+    {
+      "entity_name": "Michael Wooldridge",
+      "entity_type": "professor",
+      "description": "A professor of AI at Oxford University who warns about the risks of AI.",
+      "is_web_searched": true
+    },
+    {
+      "entity_name": "Royal Society",
+      "entity_type": "organization",
+      "description": "A UK-based scientific society that promotes science and technology.",
+      "is_web_searched": true
+    },
+    {
+      "entity_name": "Star Trek",
+      "entity_type": "TV show",
+      "description": "A science fiction series that features advanced technology and AI.",
+      "is_web_searched": true
+    },
+    {
+      "entity_name": "Center for Democracy and Technology",
+      "entity_type": "organization",
+      "description": "A group that studies technology and its impact on society.",
+      "is_web_searched": true
+    }
+  ],
+  "viewpoint_analysis": [
+    {
+      "entity_name": "Michael Wooldridge",
+      "viewpoint": "AI should be developed more carefully.",
+      "sentiment": "Positive"
+    },
+    {
+      "entity_name": "Companies",
+      "viewpoint": "They want to release AI tools quickly.",
+      "sentiment": "Neutral"
+    },
+    {
+      "entity_name": "AI chatbots",
+      "viewpoint": "They provide confident answers even when wrong.",
+      "sentiment": "Negative"
+    }
+  ],
+  "entity_relation": [
+    {
+      "subject_entity": "Michael Wooldridge",
+      "relation": "warns",
+      "object_entity": "AI risks"
+    },
+    {
+      "subject_entity": "Companies",
+      "relation": "release",
+      "object_entity": "AI tools"
+    },
+    {
+      "subject_entity": "Hindenburg",
+      "relation": "caused",
+      "object_entity": "disaster"
+    },
+    {
+      "subject_entity": "AI chatbots",
+      "relation": "provide",
+      "object_entity": "confident answers"
+    },
+    {
+      "subject_entity": "Star Trek",
+      "relation": "shows",
+      "object_entity": "advanced AI"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment Variables
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# AI Models (large files)
+backend/classifier/model/*.bin
+backend/classifier/model/*.safetensors
+backend/summarizer/model/
+
+# Redis
+dump.rdb
+
+# MongoDB
+*.bson
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Scrapy
+.scrapy/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+tests/**/*.mp3
+tests/**/*_results_*.json
+
+# WeChat Mini Program
+miniprogram/node_modules/
+miniprogram/.tea/
+miniprogram/project.private.config.json

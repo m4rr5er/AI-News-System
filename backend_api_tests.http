@@ -1,0 +1,125 @@
+@baseUrl = https://www.marrs.work
+@localUrl = http://127.0.0.1:8000
+@newsId = 1
+@podcastId = 1
+@taskId = REPLACE_WITH_TASK_ID
+@openid = test_openid
+@entity = OpenAI
+@topic = AI
+@word = example
+
+### News list used by home page
+GET {{baseUrl}}/api/news/list?page=1&page_size=10
+
+### News list by category used when switching categories
+GET {{baseUrl}}/api/news/list?page=1&page_size=10&category=business
+
+### News categories used by home page category selector
+GET {{baseUrl}}/api/news/categories
+
+### News detail used by article detail page
+GET {{baseUrl}}/api/news/{{newsId}}
+
+### News search used by search box and entity Read Articles action
+GET {{baseUrl}}/api/news/search?q=AI&page=1&page_size=10
+
+### News sentiment endpoint exists in backend, not currently called by index page
+GET {{baseUrl}}/api/news/{{newsId}}/sentiments
+
+### Dictionary lookup used when tapping a word in article detail
+GET {{baseUrl}}/api/dict/lookup?word={{word}}
+
+
+### Dictionary audio proxy used after dictionary lookup returns an audio key
+GET {{baseUrl}}/api/dict/audio?key={{word}}&type=1
+
+### Podcast list used by podcast page
+GET {{baseUrl}}/api/podcast/list?page=1&page_size=10
+
+### Podcast detail used by full podcast player
+GET {{baseUrl}}/api/podcast/{{podcastId}}
+
+### Podcast audio proxy exists in backend
+GET {{baseUrl}}/api/podcast/{{podcastId}}/audio
+
+### Knowledge graph trending entities used by Graph / Heat Trends topic selector
+GET {{baseUrl}}/api/knowledge-graph/trending-entities?days=7&limit=10
+
+### Knowledge graph trends used by Heat Trends page
+GET {{baseUrl}}/api/knowledge-graph/trends?topic={{topic}}
+
+### Knowledge graph entity articles used by entity detail bottom sheet
+GET {{baseUrl}}/api/knowledge-graph/entity-articles?entity={{entity}}&limit=5
+
+### Knowledge graph entities exists in backend; Entity Network currently uses static demo graph
+GET {{baseUrl}}/api/knowledge-graph/entities?topic={{topic}}
+
+### Chat question used by article detail AI chat
+POST {{baseUrl}}/api/chat/question
+Content-Type: application/json
+
+{
+  "news_id": {{newsId}},
+  "question": "Summarize this article in one sentence.",
+  "history": []
+}
+
+### Record reading history used after opening a news detail when user is logged in
+POST {{baseUrl}}/api/auth/history
+Content-Type: application/json
+
+{
+  "user_id": "{{openid}}",
+  "news_id": {{newsId}}
+}
+
+### Get reading history used by Me page
+GET {{baseUrl}}/api/auth/history?user_id={{openid}}&page=1&page_size=20
+
+### WeChat login used by Me page login flow
+### Replace code with a real wx.login code from the mini program.
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "code": "REPLACE_WITH_WX_LOGIN_CODE",
+  "nickname": "Test User",
+  "avatar_url": ""
+}
+
+### Admin health exists in backend; useful for deployment smoke test
+GET {{baseUrl}}/api/admin/health
+
+### Admin stats exists in backend; useful for backend dashboard smoke test
+GET {{baseUrl}}/api/admin/stats
+
+### Admin cleanup exists in backend; run carefully
+POST {{baseUrl}}/api/admin/cleanup
+Content-Type: application/json
+
+{
+  "days": 30
+}
+
+### AI process exists in backend; not currently called by mini program index page
+POST {{baseUrl}}/api/ai/process
+Content-Type: application/json
+
+{
+  "batch_size": 10,
+  "max_workers": 10
+}
+
+### AI task status after /api/ai/process returns a task_id
+GET {{baseUrl}}/api/ai/status/{{taskId}}
+
+### Crawler trigger exists in backend; run carefully
+POST {{baseUrl}}/api/crawler/trigger
+Content-Type: application/json
+
+{
+  "source": "bbc"
+}
+
+### Crawler task status after /api/crawler/trigger returns a task_id
+GET {{baseUrl}}/api/crawler/status/{{taskId}}
